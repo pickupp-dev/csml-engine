@@ -51,7 +51,7 @@ jobs:
           command: build
           args: --manifest-path=csml_server/Cargo.toml --features csml_engine/postgresql  --release
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.amd_asset_name }}
           path: target/release/csml_server
@@ -62,7 +62,7 @@ jobs:
           command: build
           args: --manifest-path=csml_cli/Cargo.toml --features csml_engine/postgresql  --release
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.amd_cli_asset_name }}
           path: target/release/csml
@@ -106,7 +106,7 @@ jobs:
 
     steps:
       - run: mkdir -p target/release
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.amd_asset_name }}
           path: target/release
@@ -120,7 +120,7 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.amd_cli_asset_name }}
           path: target/release

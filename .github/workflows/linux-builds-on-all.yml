@@ -18,54 +18,54 @@ jobs:
             arm_cli_asset_name: csml-cli-linux-arm64
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Cache Cargo
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-csml-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-csml-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-    - name: Install postgres (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libpq-dev postgresql
-        echo "host    all             all             127.0.0.1/32            md5" > sudo tee -a /etc/postgresql/10/main/pg_hba.conf
-        sudo service postgresql restart && sleep 3
-        sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
-        sudo service postgresql restart && sleep 3
+      - name: Install postgres (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev postgresql
+          echo "host    all             all             127.0.0.1/32            md5" > sudo tee -a /etc/postgresql/10/main/pg_hba.conf
+          sudo service postgresql restart && sleep 3
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+          sudo service postgresql restart && sleep 3
 
-    - name: Install Rust Stable
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+      - name: Install Rust Stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
-    - name: (AMD) Build Server
-      uses: actions-rs/cargo@v1
-      with:
-        command: build
-        args: --manifest-path=csml_server/Cargo.toml --features csml_engine/postgresql  --release
+      - name: (AMD) Build Server
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --manifest-path=csml_server/Cargo.toml --features csml_engine/postgresql  --release
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.amd_asset_name }}
-        path: target/release/csml_server
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.amd_asset_name }}
+          path: target/release/csml_server
 
-    - name: (AMD) Build CLI
-      uses: actions-rs/cargo@v1
-      with:
-        command: build
-        args: --manifest-path=csml_cli/Cargo.toml --features csml_engine/postgresql  --release
+      - name: (AMD) Build CLI
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --manifest-path=csml_cli/Cargo.toml --features csml_engine/postgresql  --release
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.amd_cli_asset_name }}
-        path: target/release/csml
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.amd_cli_asset_name }}
+          path: target/release/csml
 
     # - name: (ARM) Build Server
     #   uses: actions-rs/cargo@v1
@@ -90,9 +90,6 @@ jobs:
     #   with:
     #     name:  ${{ matrix.arm_cli_asset_name }}
     #     path: target/aarch64-unknown-linux-gnu/release/csml
-
-
-
 
   publish-binaries:
     runs-on: ${{ matrix.os }}
@@ -137,7 +134,6 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
 
-
       # - run: mkdir -p target/aarch64-unknown-linux-gnu/release
       # - uses: actions/download-artifact@v2
       #   with:
@@ -166,8 +162,6 @@ jobs:
       #     asset_name: ${{ matrix.arm_cli_asset_name }}
       #     tag: ${{ github.ref }}
       #     overwrite: true
-
-
 
   # publish-docker:
   #   runs-on: ubuntu-22.04
@@ -220,5 +214,3 @@ jobs:
   #           pickupp/csml-engine:${{ steps.release_version.outputs.tag }}
   #         cache-from: type=local,src=/tmp/.buildx-cache
   #         cache-to: type=local,dest=/tmp/.buildx-cache
-
-

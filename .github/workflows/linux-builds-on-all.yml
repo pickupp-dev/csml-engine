@@ -78,7 +78,7 @@ jobs:
           - os: ubuntu-22.04
             asset_name: csml-server-linux-amd64
             cli_asset_name: csml-cli-linux-amd64
-          - os: ubuntu-22.04
+          - os: ubuntu-22.04-arm
             asset_name: csml-server-linux-arm64
             cli_asset_name: csml-cli-linux-arm64
 
@@ -89,7 +89,7 @@ jobs:
           name: ${{ matrix.asset_name }}
           path: target/release
 
-      - name: Upload linux AMD binary to release
+      - name: Upload linux binary to release
         uses: svenstaro/upload-release-action@2.2.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -103,7 +103,7 @@ jobs:
           name: ${{ matrix.cli_asset_name }}
           path: target/release
 
-      - name: Upload linux AMD CLI binary to release
+      - name: Upload linux CLI binary to release
         uses: svenstaro/upload-release-action@2.2.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}

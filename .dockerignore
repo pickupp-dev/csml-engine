@@ -8,3 +8,5 @@ Dockerfile
 !target/aarch64-unknown-linux-gnu/release/csml_server
 !target/aarch64-unknown-linux-gnu/debug/csml_server
 
+!target/amd64/release/csml_server
+!target/arm64/release/csml_server

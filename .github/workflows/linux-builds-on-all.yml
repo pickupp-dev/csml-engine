@@ -30,6 +30,16 @@ jobs:
             target
           key: ${{ runner.os }}-csml-cargo-${{ hashFiles('**/Cargo.lock') }}
 
+      - name: Install postgres (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev postgresql
+          echo "host    all             all             127.0.0.1/32            md5" > sudo tee -a /etc/postgresql/10/main/pg_hba.conf
+          sudo service postgresql restart && sleep 3
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+          sudo service postgresql restart && sleep 3
+
       - name: Install Rust Stable
         uses: actions-rs/toolchain@v1
         with:

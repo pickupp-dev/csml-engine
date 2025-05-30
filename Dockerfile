@@ -1,9 +1,4 @@
-FROM --platform=$TARGETPLATFORM ubuntu:22.04 AS builder
-WORKDIR /usr/src/csml
-COPY target/release/csml_server amd64_csml_server
-COPY target/aarch64-unknown-linux-gnu/release/csml_server arm64_csml_server
-
-FROM --platform=$TARGETPLATFORM ubuntu:22.04
+FROM debian:stable-slim
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -13,7 +8,7 @@ RUN update-ca-certificates
 
 WORKDIR /usr/src/csml
 
-COPY --from=builder /usr/src/csml/${TARGETARCH}_csml_server server
+COPY target/${TARGETARCH}/release/csml_server server
 
 RUN chmod 755 server
 
@@ -22,4 +17,4 @@ USER csml
 
 EXPOSE 5000
 
-CMD ./server
+CMD ["./server"]

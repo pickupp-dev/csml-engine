@@ -119,6 +119,7 @@ impl CsmlBot {
             serde_json::json!(self.apps_endpoint),
         );
         map.insert("flows".to_owned(), serde_json::json!(self.flows));
+        map.insert("modules".to_owned(), serde_json::json!(self.modules));
         map.insert(
             "default_flow".to_owned(),
             serde_json::json!(self.default_flow),

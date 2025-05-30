@@ -8,7 +8,7 @@ RUN update-ca-certificates
 
 WORKDIR /usr/src/csml
 
-COPY target/${TARGETARCH}/release/csml_server server
+COPY ./target/${TARGETARCH}/release/csml_server server
 
 RUN chmod 755 server
 

@@ -110,12 +110,12 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: csml-server-linux-amd64
           path: target/amd64/release
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: csml-server-linux-arm64
           path: target/arm64/release

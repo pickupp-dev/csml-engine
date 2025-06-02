@@ -8,7 +8,7 @@ members = [
     "bindings/aws_lambda",
 
     "bindings/ios",
-    "bindings/android"
+    "bindings/android",
 ]
 
 [profile.test]

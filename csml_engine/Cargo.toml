@@ -5,7 +5,7 @@ authors = [
     "Alexis Merelo <alexis.merelo@clevy.io>",
     "François Falala-Sechet <francois@clevy.io>",
     "Bastien Botella <bastien@clevy.io>",
-    "Jefferson Le Quellec <jefferson.le-quellec@clevy.io>"
+    "Jefferson Le Quellec <jefferson.le-quellec@clevy.io>",
 ]
 description = """
 The CSML Engine is a conversational engine designed to make it extremely easy to create rich and powerful chatbots.
@@ -24,7 +24,12 @@ dynamo = ["rusoto_core", "rusoto_dynamodb", "rusoto_s3", "serde_dynamodb"]
 postgresql = ["diesel_postgresql"]
 sqlite = ["diesel_sqlite"]
 
-diesel_postgresql = ["diesel/postgres", "diesel/uuidv07", "diesel/chrono", "diesel_migrations"]
+diesel_postgresql = [
+    "diesel/postgres",
+    "diesel/uuidv07",
+    "diesel/chrono",
+    "diesel_migrations",
+]
 diesel_sqlite = ["diesel/sqlite", "diesel/chrono", "diesel_migrations"]
 
 [dependencies.diesel_migrations]
@@ -57,19 +62,19 @@ features = ["rustls"]
 optional = true
 
 [dependencies.rusoto_core]
-version = "0.47.0"
+version = "0.48.0"
 default_features = false
 features = ["rustls"]
 optional = true
 
 [dependencies.rusoto_dynamodb]
-version = "0.47.0"
+version = "0.48.0"
 default_features = false
 features = ["rustls"]
 optional = true
 
 [dependencies.rusoto_s3]
-version = "0.47.0"
+version = "0.48.0"
 default_features = false
 features = ["rustls"]
 optional = true
@@ -78,7 +83,7 @@ optional = true
 csml_interpreter = { version = "1.11.2", path = "../csml_interpreter" }
 multimap = "0.8.3"
 md-5 = "0.10.0"
-chrono = { version = "0.4.19", features = ["serde"]}
+chrono = { version = "0.4.19", features = ["serde"] }
 rand = "0.8.4"
 uuid = { version = "0.8.2", features = ["serde", "v4"] }
 serde = { version = "1.0.133", features = ["derive"] }
@@ -93,7 +98,7 @@ tokio = "1.19.2"
 ureq = { version = "2.4.0", features = ["json"] }
 bincode = "1.3.3"
 log = "0.4.14"
-env_logger= "0.9.0"
+env_logger = "0.9.0"
 
 [[example]]
 name = "command_line"
@@ -101,4 +106,3 @@ name = "command_line"
 name = "fold_bot"
 [[example]]
 name = "get_messages"
-

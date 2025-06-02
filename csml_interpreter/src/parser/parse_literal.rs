@@ -21,14 +21,14 @@ use nom::{
 // PRIVATE FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////
 
-fn signed_digits<'a, E>(s: Span<'a>) -> IResult<Span<'a>, Span, E>
+fn signed_digits<'a, E>(s: Span<'a>) -> IResult<Span<'a>, Span<'a>, E>
 where
     E: ParseError<Span<'a>> + ContextError<Span<'a>>,
 {
     recognize(tuple((opt(one_of("+-")), decimal)))(s)
 }
 
-fn decimal<'a, E>(s: Span<'a>) -> IResult<Span<'a>, Span, E>
+fn decimal<'a, E>(s: Span<'a>) -> IResult<Span<'a>, Span<'a>, E>
 where
     E: ParseError<Span<'a>> + ContextError<Span<'a>>,
 {

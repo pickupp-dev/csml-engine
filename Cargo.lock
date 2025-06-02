@@ -1054,12 +1054,12 @@ dependencies = [
 
 [[package]]
 name = "crossterm"
-version = "0.21.0"
+version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "486d44227f71a1ef39554c0dc47e44b9f4139927c75043312690c3f476d1d788"
+checksum = "c85525306c4291d1b73ce93c8acf9c339f9b213aef6c1d85c3830cbf1c16325c"
 dependencies = [
  "bitflags 1.3.2",
- "crossterm_winapi 0.8.0",
+ "crossterm_winapi 0.9.1",
  "libc",
  "mio 0.7.14",
  "parking_lot 0.11.2",
@@ -1070,15 +1070,15 @@ dependencies = [
 
 [[package]]
 name = "crossterm"
-version = "0.22.1"
+version = "0.28.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c85525306c4291d1b73ce93c8acf9c339f9b213aef6c1d85c3830cbf1c16325c"
+checksum = "829d955a0bb380ef178a640b91779e3987da38c9aea133b20614cfed8cdea9c6"
 dependencies = [
- "bitflags 1.3.2",
+ "bitflags 2.9.1",
  "crossterm_winapi 0.9.1",
- "libc",
- "mio 0.7.14",
- "parking_lot 0.11.2",
+ "mio 1.0.4",
+ "parking_lot 0.12.4",
+ "rustix 0.38.44",
  "signal-hook",
  "signal-hook-mio",
  "winapi",
@@ -1127,7 +1127,7 @@ name = "csml"
 version = "0.1.0"
 dependencies = [
  "clap",
- "crossterm 0.21.0",
+ "crossterm 0.28.1",
  "csml_engine",
  "csml_interpreter 1.11.2",
  "dotenv",
@@ -4278,6 +4278,7 @@ checksum = "34db1a06d485c9142248b7a054f034b349b212551f3dfd19c94d45a754a217cd"
 dependencies = [
  "libc",
  "mio 0.7.14",
+ "mio 1.0.4",
  "signal-hook",
 ]
 

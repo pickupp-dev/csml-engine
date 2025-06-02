@@ -57,25 +57,25 @@ optional = true
 
 [dependencies.serde_dynamodb]
 version = "0.9.0"
-default_features = false
+default-features = false
 features = ["rustls"]
 optional = true
 
 [dependencies.rusoto_core]
 version = "0.48.0"
-default_features = false
+default-features = false
 features = ["rustls"]
 optional = true
 
 [dependencies.rusoto_dynamodb]
 version = "0.48.0"
-default_features = false
+default-features = false
 features = ["rustls"]
 optional = true
 
 [dependencies.rusoto_s3]
 version = "0.48.0"
-default_features = false
+default-features = false
 features = ["rustls"]
 optional = true
 

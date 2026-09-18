@@ -1,0 +1,36 @@
+{
+  "event": {
+    "metadata": {
+      "contact": {
+        "additional_attributes": {},
+        "id": 1477486,
+        "account_id": 35,
+        "custom_attributes": {},
+        "phone_number": "+85256395419"
+      },
+      "attachments": [],
+      "conversation": {
+        "id": 9544,
+        "inbox_id": 525,
+        "account_id": 35,
+        "contact_id": 1477486
+      }
+    },
+    "payload": {
+      "secure": false,
+      "content_type": "text",
+      "content": {
+        "text": "因為啱啱落咗單，但係未見到有任何運輸相關嘅資料"
+      }
+    },
+    "low_data_mode": false,
+    "request_id": "15ff8e46-32a9-4070-8591-b6be436acd1c",
+    "client": {
+      "user_id": "85256395419-9544",
+      "bot_id": "chatwoot-bot-525",
+      "channel_id": "chatwoot-bot-inbox-525"
+    },
+    "ttl_duration": 1
+  },
+  "bot_id": "chatwoot-bot-525"
+}

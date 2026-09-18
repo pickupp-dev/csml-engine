@@ -1,30 +1,28 @@
-use diesel::{RunQueryDsl, ExpressionMethods, QueryDsl};
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 
 use crate::{
     encrypt::{decrypt_data, encrypt_data},
-    EngineError, PostgresqlClient,
-    Client
+    Client, EngineError, PostgresqlClient,
 };
 
-use super::{
-    models,
-    schema::csml_states
-};
-use chrono::{NaiveDateTime};
+use super::{models, schema::csml_states};
+use chrono::NaiveDateTime;
 
 pub fn delete_state_key(
     client: &Client,
     type_: &str,
     key: &str,
-    db: &PostgresqlClient,
+    db: &mut PostgresqlClient,
 ) -> Result<(), EngineError> {
-    diesel::delete(csml_states::table
-        .filter(csml_states::bot_id.eq(&client.bot_id))
-        .filter(csml_states::channel_id.eq(&client.channel_id))
-        .filter(csml_states::user_id.eq(&client.user_id))
-        .filter(csml_states::type_.eq(type_))
-        .filter(csml_states::key.eq(key))
-    ).execute(&db.client)?;
+    diesel::delete(
+        csml_states::table
+            .filter(csml_states::bot_id.eq(&client.bot_id))
+            .filter(csml_states::channel_id.eq(&client.channel_id))
+            .filter(csml_states::user_id.eq(&client.user_id))
+            .filter(csml_states::type_.eq(type_))
+            .filter(csml_states::key.eq(key)),
+    )
+    .execute(&mut db.client)?;
 
     Ok(())
 }
@@ -33,43 +31,36 @@ pub fn get_state_key(
     client: &Client,
     type_: &str,
     key: &str,
-    db: &PostgresqlClient,
+    db: &mut PostgresqlClient,
 ) -> Result<Option<serde_json::Value>, EngineError> {
     let state: Result<models::State, diesel::result::Error> = csml_states::table
-    .filter(csml_states::bot_id.eq(&client.bot_id))
-    .filter(csml_states::channel_id.eq(&client.channel_id))
-    .filter(csml_states::user_id.eq(&client.user_id))
-
-    .filter(csml_states::type_.eq(type_))
-    .filter(csml_states::key.eq(key))
-
-    .get_result(&db.client);
+        .filter(csml_states::bot_id.eq(&client.bot_id))
+        .filter(csml_states::channel_id.eq(&client.channel_id))
+        .filter(csml_states::user_id.eq(&client.user_id))
+        .filter(csml_states::type_.eq(type_))
+        .filter(csml_states::key.eq(key))
+        .get_result(&mut db.client);
 
     match state {
         Ok(state) => {
             let value = decrypt_data(state.value)?;
             Ok(Some(value))
-        },
-        Err(_err) => {
-            Ok(None)
         }
+        Err(_err) => Ok(None),
     }
 }
 
 pub fn get_current_state(
     client: &Client,
-    db: &PostgresqlClient,
+    db: &mut PostgresqlClient,
 ) -> Result<Option<serde_json::Value>, EngineError> {
-
     let current_state: models::State = csml_states::table
         .filter(csml_states::bot_id.eq(&client.bot_id))
         .filter(csml_states::channel_id.eq(&client.channel_id))
         .filter(csml_states::user_id.eq(&client.user_id))
-
         .filter(csml_states::type_.eq("hold"))
         .filter(csml_states::key.eq("position"))
-
-        .get_result(&db.client)?;
+        .get_result(&mut db.client)?;
 
     let current_state = serde_json::json!({
         "client": {
@@ -90,15 +81,14 @@ pub fn set_state_items(
     type_: &str,
     keys_values: Vec<(&str, &serde_json::Value)>,
     expires_at: Option<NaiveDateTime>,
-    db: &PostgresqlClient,
+    db: &mut PostgresqlClient,
 ) -> Result<(), EngineError> {
     if keys_values.len() == 0 {
         return Ok(());
     }
 
-    let mut new_states = vec!();
+    let mut new_states = vec![];
     for (key, value) in keys_values.iter() {
-
         let value = encrypt_data(value)?;
 
         let mem = models::NewState {
@@ -117,33 +107,29 @@ pub fn set_state_items(
     }
 
     diesel::insert_into(csml_states::table)
-    .values(&new_states)
-    .execute(&db.client)?;
+        .values(&new_states)
+        .execute(&mut db.client)?;
 
     Ok(())
 }
 
-pub fn delete_user_state(
-    client: &Client,
-    db: &PostgresqlClient
-) -> Result<(), EngineError> {
-    diesel::delete(csml_states::table
-        .filter(csml_states::bot_id.eq(&client.bot_id))
-        .filter(csml_states::channel_id.eq(&client.channel_id))
-        .filter(csml_states::user_id.eq(&client.user_id))
-    ).execute(&db.client).ok();
-
-    Ok(())
-}
-
-pub fn delete_all_bot_data(
-    bot_id: &str,
-    db: &PostgresqlClient,
-) -> Result<(), EngineError> {
+pub fn delete_user_state(client: &Client, db: &mut PostgresqlClient) -> Result<(), EngineError> {
     diesel::delete(
         csml_states::table
-        .filter(csml_states::bot_id.eq(bot_id))
-    ).execute(&db.client).ok();
+            .filter(csml_states::bot_id.eq(&client.bot_id))
+            .filter(csml_states::channel_id.eq(&client.channel_id))
+            .filter(csml_states::user_id.eq(&client.user_id)),
+    )
+    .execute(&mut db.client)
+    .ok();
+
+    Ok(())
+}
+
+pub fn delete_all_bot_data(bot_id: &str, db: &mut PostgresqlClient) -> Result<(), EngineError> {
+    diesel::delete(csml_states::table.filter(csml_states::bot_id.eq(bot_id)))
+        .execute(&mut db.client)
+        .ok();
 
     Ok(())
 }

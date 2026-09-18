@@ -1,4 +1,4 @@
-use diesel::{Queryable, Identifiable, Insertable, Associations,};
+use diesel::{Associations, Identifiable, Insertable, Queryable};
 
 use chrono::NaiveDateTime;
 use uuid::Uuid;
@@ -6,7 +6,7 @@ use uuid::Uuid;
 use super::schema::*;
 
 #[derive(Identifiable, Queryable, PartialEq, Debug)]
-#[table_name = "cmsl_bot_versions"]
+#[diesel(table_name = cmsl_bot_versions)]
 pub struct Bot {
     pub id: Uuid,
 
@@ -18,8 +18,8 @@ pub struct Bot {
     pub created_at: NaiveDateTime,
 }
 
-#[derive(Queryable, Insertable, Associations, PartialEq, Debug)]
-#[table_name = "cmsl_bot_versions"]
+#[derive(Queryable, Insertable, PartialEq, Debug)]
+#[diesel(table_name = cmsl_bot_versions)]
 pub struct NewBot<'a> {
     pub id: Uuid,
     pub bot_id: &'a str,
@@ -27,8 +27,8 @@ pub struct NewBot<'a> {
     pub engine_version: &'a str,
 }
 
-#[derive(Identifiable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_conversations"]
+#[derive(Identifiable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_conversations)]
 pub struct Conversation {
     pub id: Uuid,
 
@@ -47,8 +47,8 @@ pub struct Conversation {
     pub expires_at: Option<NaiveDateTime>,
 }
 
-#[derive(Insertable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_conversations"]
+#[derive(Insertable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_conversations)]
 pub struct NewConversation<'a> {
     pub id: Uuid,
     pub bot_id: &'a str,
@@ -62,8 +62,8 @@ pub struct NewConversation<'a> {
     pub expires_at: Option<NaiveDateTime>,
 }
 
-#[derive(Identifiable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_memories"]
+#[derive(Identifiable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_memories)]
 pub struct Memory {
     pub id: Uuid,
     pub bot_id: String,
@@ -78,8 +78,8 @@ pub struct Memory {
     pub created_at: NaiveDateTime,
 }
 
-#[derive(Insertable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_memories"]
+#[derive(Insertable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_memories)]
 pub struct NewMemory<'a> {
     pub id: Uuid,
     pub bot_id: &'a str,
@@ -93,8 +93,8 @@ pub struct NewMemory<'a> {
 }
 
 #[derive(Identifiable, Queryable, Associations, PartialEq, Debug)]
-#[belongs_to(Conversation)]
-#[table_name = "csml_messages"]
+#[diesel(belongs_to(Conversation))]
+#[diesel(table_name = csml_messages)]
 pub struct Message {
     pub id: Uuid,
     pub conversation_id: Uuid,
@@ -114,8 +114,8 @@ pub struct Message {
     pub expires_at: Option<NaiveDateTime>,
 }
 
-#[derive(Insertable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_messages"]
+#[derive(Insertable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_messages)]
 pub struct NewMessages<'a> {
     pub id: Uuid,
     pub conversation_id: Uuid,
@@ -132,8 +132,8 @@ pub struct NewMessages<'a> {
     pub expires_at: Option<NaiveDateTime>,
 }
 
-#[derive(Identifiable, Insertable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_states"]
+#[derive(Identifiable, Insertable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_states)]
 pub struct State {
     pub id: Uuid,
 
@@ -150,8 +150,8 @@ pub struct State {
     pub created_at: NaiveDateTime,
 }
 
-#[derive(Insertable, Queryable, Associations, PartialEq, Debug)]
-#[table_name = "csml_states"]
+#[derive(Insertable, Queryable, PartialEq, Debug)]
+#[diesel(table_name = csml_states)]
 pub struct NewState<'a> {
     pub id: Uuid,
     pub bot_id: &'a str,
@@ -164,32 +164,3 @@ pub struct NewState<'a> {
 
     pub expires_at: Option<NaiveDateTime>,
 }
-
-
-
-
-
-// use serde::{ Deserializer};
-// use serde_derive::{Serialize,Deserialize};
-
-// const FORMAT: &str = "%Y-%m-%d %H:%M:%S";
-
-// fn datefmt<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
-//     where
-//         D: Deserializer<'de>,
-// {
-//     let s = String::deserialize(deserializer)?;
-//     Utc.datetime_from_str(&s, FORMAT)
-//         .map_err(serde::de::Error::custom)
-// }
-
-// fn option_datefmt<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
-//     where
-//         D: Deserializer<'de>,
-// {
-//     #[derive(Deserialize)]
-//     struct Wrapper(#[serde(deserialize_with = "datefmt")] NaiveDateTime);
-
-//     let v = Option::deserialize(deserializer)?;
-//     Ok(v.map(|Wrapper(a)| a))
-// }

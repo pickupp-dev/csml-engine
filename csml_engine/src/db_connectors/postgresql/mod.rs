@@ -6,8 +6,8 @@ pub mod state;
 
 pub mod pagination;
 
-pub mod schema;
 pub mod models;
+pub mod schema;
 
 pub mod expired_data;
 
@@ -15,21 +15,20 @@ use crate::{Database, EngineError, PostgresqlClient};
 
 use diesel::prelude::{Connection, PgConnection};
 
-embed_migrations!("migrations/postgresql");
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/postgresql");
 
 pub fn init() -> Result<Database, EngineError> {
-
     let uri = match std::env::var("POSTGRESQL_URL") {
         Ok(var) => var,
         _ => "".to_owned(),
     };
 
-    let pg_connection = PgConnection::establish(&uri)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", uri));
+    let pg_connection =
+        PgConnection::establish(&uri).unwrap_or_else(|_| panic!("Error connecting to {}", uri));
 
-    let db = Database::Postgresql(
-        PostgresqlClient::new(pg_connection)
-    );
+    let db = Database::Postgresql(PostgresqlClient::new(pg_connection));
     Ok(db)
 }
 
@@ -39,15 +38,17 @@ pub fn make_migrations() -> Result<(), EngineError> {
         _ => "".to_owned(),
     };
 
-    let pg_connection = PgConnection::establish(&uri)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", uri));
+    let mut pg_connection =
+        PgConnection::establish(&uri).unwrap_or_else(|_| panic!("Error connecting to {}", uri));
 
-    embedded_migrations::run_with_output(&pg_connection, &mut std::io::stdout())?;
+    pg_connection
+        .run_pending_migrations(MIGRATIONS)
+        .map_err(|e| EngineError::SqlMigrationsError(e.to_string()))?;
 
     Ok(())
 }
 
-pub fn get_db<'a>(db: &'a Database) -> Result<&'a PostgresqlClient, EngineError> {
+pub fn get_db<'a>(db: &'a mut Database) -> Result<&'a mut PostgresqlClient, EngineError> {
     match db {
         Database::Postgresql(db) => Ok(db),
         _ => Err(EngineError::Manager(

@@ -552,8 +552,8 @@ impl From<diesel::result::Error> for EngineError {
 }
 
 #[cfg(any(feature = "postgresql", feature = "sqlite"))]
-impl From<diesel_migrations::RunMigrationsError> for EngineError {
-    fn from(e: diesel_migrations::RunMigrationsError) -> Self {
+impl From<diesel_migrations::MigrationError> for EngineError {
+    fn from(e: diesel_migrations::MigrationError) -> Self {
         EngineError::SqlMigrationsError(e.to_string())
     }
 }
